@@ -23,18 +23,32 @@ export function taxEstimationFromBrutto(brutto: number): number {
   if (zVE <= grundFreibetrag) {
     return 0;
   } else if (zVE <= firstBarrier) {
-    const y = (zVE - grundFreibetrag) / 10000;
+    const y = (zVE - grundFreibetrag) / 10000.0;
     return (979.18 * y + 1400) * y;
   } else if (zVE <= secondBarrier) {
-    const y = (zVE - firstBarrier) / 10000;
+    const y = (zVE - firstBarrier) / 10000.0;
     return (192.59 * y + 2397) * y + 966.53;
   } else if (zVE <= thirdBarrier) {
     return 0.42 * zVE - 9972.98;
   } else {
     return 0.45 * zVE - 18307.73;
   }
+}
 
-  return zVE;
+// source: https://www.smart-rechner.de/soli/rechner.php#:~:text=1.816%2C98%20Euro.-,Berechnung%20Soli%202023,5%20Prozent%20seiner%20ESt%20zahlen.
+export function soliFromTax(tax: number): number {
+  if (tax <= 17543) {
+    return 0;
+  } else {
+    return tax * 0.055;
+  }
+}
+
+export function taxAndSoliEstimationFromBrutto(brutto: number): number {
+  const taxEstimation = taxEstimationFromBrutto(brutto);
+  const soli = soliFromTax(taxEstimation);
+  console.log(soli);
+  return taxEstimation + soli;
 }
 
 /*
