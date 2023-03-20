@@ -1,10 +1,6 @@
 import { assert } from "chai";
 import { describe } from "mocha";
-import {
-  soliFromTax,
-  taxAndSoliEstimationFromGrossIncome,
-  taxEstimationFromGrossIncome,
-} from "../src/calculations";
+import { soliFromTax, taxEstimationFromGrossIncome } from "../src/calculations";
 
 describe("Tax tests", () => {
   /*

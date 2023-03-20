@@ -17,23 +17,23 @@ function socialDeductionsEmployeeSHare(grossIncome: number): number {
 }
 
 export function taxEstimationFromGrossIncome(grossIncome: number): number {
-  const toBeTaxedIncome =
+  const zVE =
     grossIncome - socialDeductionsEmployeeSHare(grossIncome) - pauschBetrag;
 
   // calc based on:
   // https://www.finanz-tools.de/einkommensteuer/berechnung-formeln/2023
-  if (toBeTaxedIncome <= basicAllowence) {
+  if (zVE <= basicAllowence) {
     return 0;
-  } else if (toBeTaxedIncome <= firstBarrier) {
-    const y = (toBeTaxedIncome - basicAllowence) / 10000.0;
+  } else if (zVE <= firstBarrier) {
+    const y = (zVE - basicAllowence) / 10000.0;
     return (979.18 * y + 1400) * y;
-  } else if (toBeTaxedIncome <= secondBarrier) {
-    const y = (toBeTaxedIncome - firstBarrier) / 10000.0;
+  } else if (zVE <= secondBarrier) {
+    const y = (zVE - firstBarrier) / 10000.0;
     return (192.59 * y + 2397) * y + 966.53;
-  } else if (toBeTaxedIncome <= thirdBarrier) {
-    return 0.42 * toBeTaxedIncome - 9972.98;
+  } else if (zVE <= thirdBarrier) {
+    return 0.42 * zVE - 9972.98;
   } else {
-    return 0.45 * toBeTaxedIncome - 18307.73;
+    return 0.45 * zVE - 18307.73;
   }
 }
 
@@ -44,10 +44,4 @@ export function soliFromTax(tax: number): number {
   } else {
     return tax * 0.055;
   }
-}
-
-export function taxAndSoliEstimationFromGrossIncome(brutto: number): number {
-  const taxEstimation = taxEstimationFromGrossIncome(brutto);
-  const soli = soliFromTax(taxEstimation);
-  return taxEstimation + soli;
 }
