@@ -2,8 +2,8 @@ import { assert } from "chai";
 import { describe } from "mocha";
 import {
   soliFromTax,
-  taxAndSoliEstimationFromBrutto,
-  taxEstimationFromBrutto,
+  taxAndSoliEstimationFromGrossIncome,
+  taxEstimationFromGrossIncome,
 } from "../src/calculations";
 
 describe("Tax tests", () => {
@@ -26,7 +26,7 @@ describe("Tax tests", () => {
 
     */
   const examples = [
-    // [brutto, taxesInclSoli, soli]
+    // [grossIncome, taxesInclSoli, soli]
     [10000, 0, 0],
     [15999, 66.96, 0],
     [20000, 729.96, 0],
@@ -38,18 +38,18 @@ describe("Tax tests", () => {
   ];
 
   examples.forEach((example) => {
-    const [brutto, trueTaxes, trueSoli] = example;
-    const taxesEstimation = taxEstimationFromBrutto(brutto);
+    const [grossIncome, trueTaxes, trueSoli] = example;
+    const taxesEstimation = taxEstimationFromGrossIncome(grossIncome);
     const soliEstimation = soliFromTax(taxesEstimation);
     const tolerance = 0.01;
 
-    it(`should return ${trueTaxes} tax for brutto of ${brutto} with tolerance of ${tolerance} `, () => {
-      const deltaInPercent = (trueTaxes - taxesEstimation) / brutto;
+    it(`should return ${trueTaxes} tax for grossIncome of ${grossIncome} with tolerance of ${tolerance} `, () => {
+      const deltaInPercent = (trueTaxes - taxesEstimation) / grossIncome;
       assert.isAtMost(Math.abs(deltaInPercent), tolerance);
     });
 
-    it(`should return ${trueSoli} soli for brutto of ${brutto} with tolerance of ${tolerance} `, () => {
-      const deltaInPercent = (trueSoli - soliEstimation) / brutto;
+    it(`should return ${trueSoli} soli for grossIncome of ${grossIncome} with tolerance of ${tolerance} `, () => {
+      const deltaInPercent = (trueSoli - soliEstimation) / grossIncome;
       assert.isAtMost(Math.abs(deltaInPercent), tolerance);
     });
   });

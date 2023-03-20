@@ -1,4 +1,4 @@
-const grundFreibetrag = 10908;
+const basicAllowence = 10908;
 const firstBarrier = 15999;
 const secondBarrier = 62809;
 const thirdBarrier = 277825;
@@ -6,32 +6,34 @@ const thirdBarrier = 277825;
 const pauschBetrag = 1200;
 
 // from https://www.imacc.de/sozialabgaben-rechner-sozialversicherung/#/base-data
-function sozialAbgabenArbeitnehmer(brutto: number): number {
-  const KV = Math.min(brutto * (0.073 + 0.0065), 4987.5);
-  const PV = Math.min(brutto * (0.01525 + 0.0035), 4837.5);
-  const RV = Math.min(brutto * 0.093, 7300);
-  const AV = Math.min(brutto * 0.012, 7300);
-  return KV + PV + RV + AV;
+function socialDeductionsEmployeeSHare(grossIncome: number): number {
+  const healthInsurance = Math.min(grossIncome * (0.073 + 0.0065), 4987.5);
+  const careInsurance = Math.min(grossIncome * (0.01525 + 0.0035), 4837.5);
+  const pensionInsurance = Math.min(grossIncome * 0.093, 7300);
+  const unemploymentInsurance = Math.min(grossIncome * 0.012, 7300);
+  return (
+    healthInsurance + careInsurance + pensionInsurance + unemploymentInsurance
+  );
 }
 
-export function taxEstimationFromBrutto(brutto: number): number {
-  // this is probably very wrong
-  const zVE = brutto - sozialAbgabenArbeitnehmer(brutto) - pauschBetrag;
+export function taxEstimationFromGrossIncome(grossIncome: number): number {
+  const toBeTaxedIncome =
+    grossIncome - socialDeductionsEmployeeSHare(grossIncome) - pauschBetrag;
 
   // calc based on:
   // https://www.finanz-tools.de/einkommensteuer/berechnung-formeln/2023
-  if (zVE <= grundFreibetrag) {
+  if (toBeTaxedIncome <= basicAllowence) {
     return 0;
-  } else if (zVE <= firstBarrier) {
-    const y = (zVE - grundFreibetrag) / 10000.0;
+  } else if (toBeTaxedIncome <= firstBarrier) {
+    const y = (toBeTaxedIncome - basicAllowence) / 10000.0;
     return (979.18 * y + 1400) * y;
-  } else if (zVE <= secondBarrier) {
-    const y = (zVE - firstBarrier) / 10000.0;
+  } else if (toBeTaxedIncome <= secondBarrier) {
+    const y = (toBeTaxedIncome - firstBarrier) / 10000.0;
     return (192.59 * y + 2397) * y + 966.53;
-  } else if (zVE <= thirdBarrier) {
-    return 0.42 * zVE - 9972.98;
+  } else if (toBeTaxedIncome <= thirdBarrier) {
+    return 0.42 * toBeTaxedIncome - 9972.98;
   } else {
-    return 0.45 * zVE - 18307.73;
+    return 0.45 * toBeTaxedIncome - 18307.73;
   }
 }
 
@@ -44,36 +46,8 @@ export function soliFromTax(tax: number): number {
   }
 }
 
-export function taxAndSoliEstimationFromBrutto(brutto: number): number {
-  const taxEstimation = taxEstimationFromBrutto(brutto);
+export function taxAndSoliEstimationFromGrossIncome(brutto: number): number {
+  const taxEstimation = taxEstimationFromGrossIncome(brutto);
   const soli = soliFromTax(taxEstimation);
-  console.log(soli);
   return taxEstimation + soli;
 }
-
-/*
-function lohnsteuer_brutto_to_netto(brutto_monat) {
-
-		let brutto = brutto_monat * 12;
-		let lohnsteuer;
-		let netto;
-
-		if(brutto <= 10908)
-			netto = brutto;
-		else
-			if(brutto <= 15999)
-				netto = brutto - Math.round((979.18*(brutto-10909)/10000+1400)*(brutto-10909)/10000);
-			else
-				if(brutto <= 62809)
-					netto = brutto - Math.round((192.59*(brutto-15999)/10000+2397)*(brutto-15999)/10000+966.53);
-				else
-					if(brutto <= 277825)
-						netto = brutto - Math.round(brutto*0.42-9972.98);
-					else
-						netto = brutto - Math.round(brutto*0.45-18307.73);
-
-		netto = netto/12;
-
-		return netto;
-	}
-*/
