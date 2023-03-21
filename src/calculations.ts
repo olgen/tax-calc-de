@@ -16,7 +16,9 @@ function socialDeductionsEmployeeSHare(grossIncome: number): number {
   );
 }
 
-export function taxEstimationFromGrossIncome(grossIncome: number): number {
+export function taxEstimationFromYearlyGrossIncome(
+  grossIncome: number
+): number {
   const zVE =
     grossIncome - socialDeductionsEmployeeSHare(grossIncome) - pauschBetrag;
 
@@ -44,4 +46,17 @@ export function soliFromTax(tax: number): number {
   } else {
     return tax * 0.055;
   }
+}
+
+export function taxEstimationFromMonthlyNetIncome(x: number): number {
+  if (x <= 1021) {
+    return 0;
+  } else if (x <= 4115) {
+    return -164 + 0.0828 * x + 8.98e-5 * x * x;
+  } else {
+    return (
+      -1142 + 0.659 * x + 1.08e-5 * x ** 2 + -2e-10 * x ** 3 + 1.33e-15 * x ** 4
+    );
+  }
+  return 0;
 }
