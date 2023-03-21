@@ -52,7 +52,7 @@ export function taxEstimationFromMonthlyNetIncome(x: number): number {
   if (x <= 1021) {
     return 0;
   } else if (x <= 4115) {
-    return -164 + 0.0828 * x + 8.98e-5 * x * x;
+    return -164 + 0.0828 * x + 8.98e-5 * x ** 2;
   } else {
     return (
       -1606 +
