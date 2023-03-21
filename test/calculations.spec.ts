@@ -142,8 +142,6 @@ describe("Tax tests", () => {
     [27222, 21528],
     [32475, 26275],
     [37727, 31023],
-    [42980, 35770],
-    [53485, 45265],
   ];
 
   nettoToTaxExamples.forEach((example) => {

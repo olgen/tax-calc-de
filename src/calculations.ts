@@ -55,7 +55,11 @@ export function taxEstimationFromMonthlyNetIncome(x: number): number {
     return -164 + 0.0828 * x + 8.98e-5 * x * x;
   } else {
     return (
-      -1142 + 0.659 * x + 1.08e-5 * x ** 2 + -2e-10 * x ** 3 + 1.33e-15 * x ** 4
+      -1606 +
+      0.793 * x +
+      -1.46e-6 * x ** 2 +
+      2.33e-10 * x ** 3 +
+      -3.83e-15 * x ** 4
     );
   }
   return 0;
