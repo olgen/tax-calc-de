@@ -16,9 +16,7 @@ function socialDeductionsEmployeeSHare(grossIncome: number): number {
   );
 }
 
-export function taxEstimationFromYearlyGrossIncome(
-  grossIncome: number
-): number {
+function taxEstimationFromYearlyGrossIncome(grossIncome: number): number {
   const zVE =
     grossIncome - socialDeductionsEmployeeSHare(grossIncome) - pauschBetrag;
 
@@ -36,6 +34,19 @@ export function taxEstimationFromYearlyGrossIncome(
     return 0.42 * zVE - 9972.98;
   } else {
     return 0.45 * zVE - 18307.73;
+  }
+}
+
+export function taxEstimationFromMonthlyGrossIncome(
+  monthlyGrossIncome: number
+): number {
+  const yearlyGrossIncome = monthlyGrossIncome * 12.0;
+  const yearlyTaxEstimation =
+    taxEstimationFromYearlyGrossIncome(yearlyGrossIncome);
+  if (yearlyTaxEstimation > 0) {
+    return yearlyTaxEstimation / 12.0;
+  } else {
+    return 0;
   }
 }
 

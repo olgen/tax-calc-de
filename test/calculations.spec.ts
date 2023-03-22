@@ -2,7 +2,7 @@ import { assert } from "chai";
 import { describe } from "mocha";
 import {
   soliFromTax,
-  taxEstimationFromYearlyGrossIncome,
+  taxEstimationFromMonthlyGrossIncome,
   taxEstimationFromMonthlyNetIncome,
 } from "../src/calculations";
 
@@ -39,7 +39,10 @@ describe("Tax tests", () => {
 
   grossIncomeAndTaxes.forEach((example) => {
     const [grossIncome, trueTaxes, trueSoli] = example;
-    const taxesEstimation = taxEstimationFromYearlyGrossIncome(grossIncome);
+    const monthlyTaxEstimation = taxEstimationFromMonthlyGrossIncome(
+      grossIncome / 12.0
+    );
+    const taxesEstimation = monthlyTaxEstimation * 12.0;
     const soliEstimation = soliFromTax(taxesEstimation);
     const tolerance = 0.01;
 
