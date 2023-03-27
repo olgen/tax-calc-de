@@ -6,19 +6,23 @@ const thirdBarrier = 277825;
 const pauschBetrag = 1200;
 
 // from https://www.imacc.de/sozialabgaben-rechner-sozialversicherung/#/base-data
-function socialDeductionsEmployeeSHare(grossIncome: number): number {
-  const healthInsurance = Math.min(grossIncome * (0.073 + 0.0065), 4987.5);
-  const careInsurance = Math.min(grossIncome * (0.01525 + 0.0035), 4837.5);
-  const pensionInsurance = Math.min(grossIncome * 0.093, 7300);
-  const unemploymentInsurance = Math.min(grossIncome * 0.012, 7300);
-  return (
-    healthInsurance + careInsurance + pensionInsurance + unemploymentInsurance
-  );
+function socialDeductionsEmployeeShare(grossIncome: number): number {
+  // https://www.bundesregierung.de/breg-de/suche/beitragsbemessungsgrenzen-2023-2133570
+  const healthCap = 4987.5 * 12;
+  const careCap = 4987.5 * 12;
+  const pensionCap = 7300 * 12;
+  const unemploymentCap = 7300 * 12;
+
+  const health = Math.min(grossIncome, healthCap) * (0.073 + 0.0065);
+  const care = Math.min(grossIncome, careCap) * (0.01525 + 0.0035);
+  const pension = Math.min(grossIncome, pensionCap) * 0.093;
+  const unemployment = Math.min(grossIncome, unemploymentCap * 12) * 0.012;
+  return health + care + pension + unemployment;
 }
 
 function taxEstimationFromYearlyGrossIncome(grossIncome: number): number {
   const zVE =
-    grossIncome - socialDeductionsEmployeeSHare(grossIncome) - pauschBetrag;
+    grossIncome - socialDeductionsEmployeeShare(grossIncome) - pauschBetrag;
 
   // calc based on:
   // https://www.finanz-tools.de/einkommensteuer/berechnung-formeln/2023

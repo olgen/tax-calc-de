@@ -44,7 +44,7 @@ describe("Tax tests", () => {
     );
     const taxesEstimation = monthlyTaxEstimation * 12.0;
     const soliEstimation = soliFromTax(taxesEstimation);
-    const tolerance = 0.01;
+    const tolerance = 0.006;
 
     it(`should return ${trueTaxes} tax for grossIncome of ${grossIncome} with tolerance of ${tolerance} `, () => {
       const deltaInPercent = (trueTaxes - taxesEstimation) / grossIncome;
