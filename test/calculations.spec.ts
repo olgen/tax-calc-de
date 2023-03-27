@@ -1,7 +1,7 @@
 import { assert } from "chai";
 import { describe } from "mocha";
 import {
-  soliFromTax,
+  soliFromYearlyTaxes,
   taxEstimationFromMonthlyGrossIncome,
   taxEstimationFromMonthlyNetIncome,
 } from "../src/calculations";
@@ -43,7 +43,7 @@ describe("Tax tests", () => {
       grossIncome / 12.0
     );
     const taxesEstimation = monthlyTaxEstimation * 12.0;
-    const soliEstimation = soliFromTax(taxesEstimation);
+    const soliEstimation = soliFromYearlyTaxes(taxesEstimation);
     const tolerance = 0.006;
 
     it(`should return ${trueTaxes} tax for grossIncome of ${grossIncome} with tolerance of ${tolerance} `, () => {
