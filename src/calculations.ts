@@ -72,15 +72,19 @@ export function soliFromYearlyTaxes(tax: number): number {
 export function taxEstimationFromMonthlyNetIncome(x: number): number {
   if (x <= 1021) {
     return 0;
-  } else if (x <= 4115) {
-    return -164 + 0.0828 * x + 8.98e-5 * x ** 2;
+  } else if (x <= 3999.61) {
+    return (
+      -115 - 0.0649 * x + 2.1e-4 * x ** 2 - 4.36e-8 * x ** 3 + 5.01e-12 * x ** 4
+    );
   } else {
     return (
-      -1606 +
-      0.793 * x +
-      -1.46e-6 * x ** 2 +
-      2.33e-10 * x ** 3 +
-      -3.83e-15 * x ** 4
+      -3304 +
+      1.56 * x +
+      -1.27e-4 * x ** 2 +
+      9.84e-9 * x ** 3 +
+      -3.73e-13 * x ** 4 +
+      6.92e-18 * x ** 5 +
+      -5.04e-23 * x ** 6
     );
   }
 }
