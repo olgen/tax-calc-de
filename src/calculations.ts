@@ -16,7 +16,7 @@ function socialDeductionsEmployeeShare(grossIncome: number): number {
   const health = Math.min(grossIncome, healthCap) * (0.073 + 0.0065);
   const care = Math.min(grossIncome, careCap) * (0.01525 + 0.0035);
   const pension = Math.min(grossIncome, pensionCap) * 0.093;
-  const unemployment = Math.min(grossIncome, unemploymentCap * 12) * 0.012;
+  const unemployment = Math.min(grossIncome, unemploymentCap) * 0.012;
   return health + care + pension + unemployment;
 }
 
