@@ -1,9 +1,5 @@
-const basicAllowence = 10908;
-const firstBarrier = 15999;
-const secondBarrier = 62809;
-const thirdBarrier = 277825;
-
-const pauschBetrag = 1200;
+// https://www.gesetze-im-internet.de/estg/__9a.html
+const pauschBetrag = 1230;
 
 // from https://www.imacc.de/sozialabgaben-rechner-sozialversicherung/#/base-data
 function socialDeductionsEmployeeShare(grossIncome: number): number {
@@ -27,24 +23,40 @@ function taxableIncomeFromYearlyGrossIncome(grossIncome: number) {
   );
 }
 
-function taxEstimationFromYearlyGrossIncome(grossIncome: number): number {
-  const taxableIncome = taxableIncomeFromYearlyGrossIncome(grossIncome);
+// https://www.gesetze-im-internet.de/estg/__32a.html
+// Grundfreibetrag
+const basicAllowence = 10908;
+// Calculation barriers
+const firstBarrier = 15999;
+const secondBarrier = 62809;
+const thirdBarrier = 277825;
 
-  // calc based on:
-  // https://www.finanz-tools.de/einkommensteuer/berechnung-formeln/2023
+function incomeTaxFromTaxableIncome(taxableIncome: number): number {
+  // Grundfreibetrag
+  let tax = 0;
   if (taxableIncome <= basicAllowence) {
-    return 0;
+    tax = 0;
   } else if (taxableIncome <= firstBarrier) {
     const y = (taxableIncome - basicAllowence) / 10000.0;
-    return (979.18 * y + 1400) * y;
+    tax = (979.18 * y + 1400) * y;
   } else if (taxableIncome <= secondBarrier) {
-    const y = (taxableIncome - firstBarrier) / 10000.0;
-    return (192.59 * y + 2397) * y + 966.53;
+    const z = (taxableIncome - firstBarrier) / 10000.0;
+    tax = (192.59 * z + 2397) * z + 966.53;
   } else if (taxableIncome <= thirdBarrier) {
-    return 0.42 * taxableIncome - 9972.98;
+    const x = taxableIncome;
+    tax = 0.42 * x - 9972.98;
   } else {
-    return 0.45 * taxableIncome - 18307.73;
+    const x = taxableIncome;
+    tax = 0.45 * x - 18307.73;
   }
+  return Math.floor(tax);
+}
+
+function taxEstimationFromYearlyGrossIncome(grossIncome: number): number {
+  const taxableIncome = Math.floor(
+    taxableIncomeFromYearlyGrossIncome(grossIncome)
+  );
+  return Math.floor(incomeTaxFromTaxableIncome(taxableIncome));
 }
 
 export function taxEstimationFromMonthlyGrossIncome(
