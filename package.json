@@ -1,8 +1,8 @@
 {
   "name": "tax-calc-de",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "",
-  "main": "calculations.js",
+  "main": "src/calculations.js",
   "scripts": {
     "test": "mocha --require ts-node/register test/**/*.spec.ts",
     "build": "tsc"
