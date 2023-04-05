@@ -1,6 +1,6 @@
 {
   "name": "tax-calc-de",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "",
   "main": "src/calculations.js",
   "scripts": {

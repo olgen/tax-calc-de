@@ -2,7 +2,7 @@
 const pauschBetrag = 1230;
 
 // from https://www.imacc.de/sozialabgaben-rechner-sozialversicherung/#/base-data
-function socialDeductionsEmployeeShare(grossIncome: number): number {
+export function socialDeductionsEmployeeShare(grossIncome: number): number {
   // https://www.bundesregierung.de/breg-de/suche/beitragsbemessungsgrenzen-2023-2133570
   const healthCap = 4987.5 * 12;
   const careCap = 4987.5 * 12;
@@ -16,7 +16,7 @@ function socialDeductionsEmployeeShare(grossIncome: number): number {
   return health + care + pension + unemployment;
 }
 
-function taxableIncomeFromYearlyGrossIncome(grossIncome: number) {
+export function taxableIncomeFromYearlyGrossIncome(grossIncome: number) {
   return Math.max(
     grossIncome - socialDeductionsEmployeeShare(grossIncome) - pauschBetrag,
     0
@@ -25,19 +25,19 @@ function taxableIncomeFromYearlyGrossIncome(grossIncome: number) {
 
 // https://www.gesetze-im-internet.de/estg/__32a.html
 // Grundfreibetrag
-const basicAllowence = 10908;
+export const grundFreiBetrag = 10908;
 // Calculation barriers
 const firstBarrier = 15999;
 const secondBarrier = 62809;
 const thirdBarrier = 277825;
 
-function incomeTaxFromTaxableIncome(taxableIncome: number): number {
+export function incomeTaxFromTaxableIncome(taxableIncome: number): number {
   // Grundfreibetrag
   let tax = 0;
-  if (taxableIncome <= basicAllowence) {
+  if (taxableIncome <= grundFreiBetrag) {
     tax = 0;
   } else if (taxableIncome <= firstBarrier) {
-    const y = (taxableIncome - basicAllowence) / 10000.0;
+    const y = (taxableIncome - grundFreiBetrag) / 10000.0;
     tax = (979.18 * y + 1400) * y;
   } else if (taxableIncome <= secondBarrier) {
     const z = (taxableIncome - firstBarrier) / 10000.0;
@@ -52,7 +52,9 @@ function incomeTaxFromTaxableIncome(taxableIncome: number): number {
   return Math.floor(tax);
 }
 
-function taxEstimationFromYearlyGrossIncome(grossIncome: number): number {
+export function taxEstimationFromYearlyGrossIncome(
+  grossIncome: number
+): number {
   const taxableIncome = Math.floor(
     taxableIncomeFromYearlyGrossIncome(grossIncome)
   );
