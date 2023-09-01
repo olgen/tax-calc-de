@@ -150,7 +150,7 @@ describe("Tax tests", () => {
   nettoToTaxExamples.forEach((example) => {
     const [netIncome, trueTaxes] = example;
     const taxesEstimation = taxEstimationFromMonthlyNetIncome(netIncome);
-    const tolerance = 0.01;
+    const tolerance = 0.0011;
 
     it(`should return ${trueTaxes} tax for netIncome of ${netIncome} with tolerance of ${tolerance} `, () => {
       if (netIncome > 0) {

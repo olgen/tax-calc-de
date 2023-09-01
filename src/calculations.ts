@@ -83,29 +83,64 @@ export function soliFromYearlyTaxes(tax: number): number {
   }
 }
 
-export function taxEstimationFromMonthlyNetIncome(x: number): number {
-  if (x <= 1021) {
-    return 0;
-  } else if (x <= 3999.61) {
-    return (
-      -115 - 0.0649 * x + 2.1e-4 * x ** 2 - 4.36e-8 * x ** 3 + 5.01e-12 * x ** 4
-    );
-  } else {
-    return (
-      -3304 +
-      1.56 * x +
-      -1.27e-4 * x ** 2 +
-      9.84e-9 * x ** 3 +
-      -3.73e-13 * x ** 4 +
-      6.92e-18 * x ** 5 +
-      -5.04e-23 * x ** 6
-    );
-  }
-}
-
 export function totalMonthlyTaxes(monthlyGrossIncome: number) {
   const yearlyGrossIncome = monthlyGrossIncome * 12;
   const incomeTax = taxEstimationFromYearlyGrossIncome(yearlyGrossIncome);
   const soli = soliFromYearlyTaxes(incomeTax);
   return (incomeTax + soli) / 12;
+}
+
+function evalPolynome(polynome: number[], x: number): number {
+  console.log(polynome);
+  return polynome.reduce((acc, coeff, i) => acc + coeff * x ** i, 0);
+}
+
+const estimationRanges = [
+  { from: 0, to: 1021, polynome: [-0.0] },
+  {
+    from: 1021,
+    to: 4000,
+    polynome: [
+      1224.4865068275183, -4.494551586587648, 0.00631676838552744,
+      -4.638990197807369e-6, 2.0747386480835356e-9, -5.729907062763124e-13,
+      9.539072623148743e-17, -8.727718418243321e-21, 3.3457515781258825e-25,
+    ],
+  },
+  {
+    from: 4000,
+    to: 5700,
+    polynome: [
+      -68109885.9162739, 110830.40452052116, -78.78572926336273,
+      0.03195969238024829, -8.092505241180312e-6, 1.3098808176528328e-9,
+      -1.32370319156251e-13, 7.636272141946083e-18, -1.925565966182529e-22,
+    ],
+  },
+  {
+    from: 5700,
+    to: 22000,
+    polynome: [
+      -1681197.5646438038, 1824.7129753627903, -0.8884166023721691,
+      0.0002566258969481694, -4.895864728766341e-8, 6.4996355938781395e-12,
+      -6.158707380216953e-16, 4.1985556275070146e-20, -2.044998422110167e-24,
+      6.9452189782007e-29, -1.5624009378472232e-33, 2.0921786764255328e-38,
+      -1.262284223778199e-43,
+    ],
+  },
+  {
+    from: 22000,
+    to: 100000,
+    polynome: [-3079.657924797718, 0.9038553069966684],
+  },
+];
+
+export function taxEstimationFromMonthlyNetIncome(netto: number): number {
+  for (var estimationRange of estimationRanges) {
+    if (netto < estimationRange.to) {
+      return evalPolynome(estimationRange.polynome, netto);
+    }
+  }
+  return evalPolynome(
+    estimationRanges[estimationRanges.length - 1].polynome,
+    netto
+  );
 }
