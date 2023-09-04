@@ -2,8 +2,8 @@ const request = require("request-promise");
 const cheerio = require("cheerio");
 const fs = require("fs");
 
-const yearOfAssessment = "2023"; // the latest is 2023.5
-const taxDataPath = `data/tax-data-${yearOfAssessment}.csv`;
+const yearOfAssessment = "2023.5"; // the latest is 2023.5
+const taxDataPath = `data/tax-data-${yearOfAssessment}-mit-werbungskosten.csv`;
 
 const incomeTaxSelector = "tbody tr:nth-child(11) td:nth-child(3)";
 const socialSecuritySelector = "tbody tr:nth-child(20) td:nth-child(3)";

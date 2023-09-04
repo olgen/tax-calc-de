@@ -96,14 +96,30 @@ function evalPolynome(polynome: number[], x: number): number {
   return polynome.reduce((acc, coeff, i) => acc + coeff * x ** i, 0);
 }
 
-export function taxEstimationFromMonthlyNetIncome(netto: number): number {
-  for (var estimationRange of polynomes.netToTax) {
-    if (netto < estimationRange.to) {
-      return evalPolynome(estimationRange.polynome, netto);
+type EstimationPolynome = {
+  to: number;
+  from: number;
+  polynome: number[];
+};
+
+function evalPolynomeRange(
+  polynomeRange: EstimationPolynome[],
+  x: number
+): number {
+  for (var estimationPolynome of polynomeRange) {
+    if (x < estimationPolynome.to) {
+      return evalPolynome(estimationPolynome.polynome, x);
     }
   }
-  return evalPolynome(
-    polynomes.netToTax[polynomes.netToTax.length - 1].polynome,
-    netto
-  );
+  return evalPolynome(polynomeRange[polynomeRange.length - 1].polynome, x);
+}
+
+export function taxEstimationFromMonthlyNetIncome(netto: number): number {
+  return evalPolynomeRange(polynomes.netToTax, netto);
+}
+
+export function socialSecurityEstimationFromMonthlyNetIncome(
+  netto: number
+): number {
+  return evalPolynomeRange(polynomes.netToSocialSecurity, netto);
 }
