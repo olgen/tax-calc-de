@@ -20,7 +20,7 @@ async function getTaxEstimation(monthlyGrossIncome) {
         f_abrechnungszeitraum: "monat",
         f_geld_werter_vorteil: 0,
         f_abrechnungsjahr: yearOfAssessment,
-        f_steuerfreibetrag: 1250,
+        f_steuerfreibetrag: 1230,
         f_steuerklasse: 1,
         f_kirche: "nein",
         f_bundesland: "berlin",
