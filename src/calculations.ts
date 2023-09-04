@@ -2,6 +2,7 @@
 const pauschBetrag = 1230;
 
 import polynomes from "./polynomes.json";
+import polynomesMitWerbungskosten from "./polynomes-mit-werbungskosten.json";
 
 // from https://www.imacc.de/sozialabgaben-rechner-sozialversicherung/#/base-data
 export function socialDeductionsEmployeeShare(grossIncome: number): number {
@@ -114,12 +115,27 @@ function evalPolynomeRange(
   return evalPolynome(polynomeRange[polynomeRange.length - 1].polynome, x);
 }
 
-export function taxEstimationFromMonthlyNetIncome(netto: number): number {
-  return evalPolynomeRange(polynomes.netToTax, netto);
+export function taxEstimationFromMonthlyNetIncome(
+  netto: number,
+  mitWerbungskosten: boolean
+): number {
+  if (mitWerbungskosten) {
+    return evalPolynomeRange(polynomesMitWerbungskosten.netToTax, netto);
+  } else {
+    return evalPolynomeRange(polynomes.netToTax, netto);
+  }
 }
 
 export function socialSecurityEstimationFromMonthlyNetIncome(
-  netto: number
+  netto: number,
+  mitWerbungskosten: boolean
 ): number {
-  return evalPolynomeRange(polynomes.netToSocialSecurity, netto);
+  if (mitWerbungskosten) {
+    return evalPolynomeRange(
+      polynomesMitWerbungskosten.netToSocialSecurity,
+      netto
+    );
+  } else {
+    return evalPolynomeRange(polynomes.netToSocialSecurity, netto);
+  }
 }
